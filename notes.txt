@@ -1,0 +1,153 @@
+Conditional operations
+beq rs, rt, L1 (jump if equal)
+bne rs, rt, L1 (jump if not equal)
+j L1 (unconditional jump) 
+
+Each instruction takes up 32 bits (4 bytes)
+Gets stored in the text segment
+
+If-Statements
+Taken branch is given in the instruction
+Not taken branch is given by the next instruction
+
+Compiling Loop Statements
+jump back to top of loop if condition isn't satisfied
+If it is satisfied, jump to the exit (following code)
+
+Basic Blocks
+No embedded branches except at the end
+No branch targets except at the beginning
+Identifies basic blocks for optimization
+
+More Conditional Operations
+Set result to 1 if condition is true.  0 otherwise
+slt (set less than) rd, rs, rt 
+if rs < rt = 1 else rd = 0
+slti rt, rs, constant
+if rs < constant rt = 1 else rt = 0
+Used in combination with branch and $zero
+
+slt, slti (signed comparison)
+sltu, sltui (unsigned comparison)
+
+
+
+Procedure Calling
+1. place parameters in registers
+2. transfer control to procedure
+3. acquire storage for procedure 
+4. perform procedure operations
+5. place result in register for caller
+6. return to place of call 
+
+Procedure Call Instructions
+jal (jump and link) ProcedureLabel
+address of follow instruciton put in $ra (return address)
+Jumps to target address
+jr (jump register) $ra
+Copies $ra to program counter
+
+
+
+
+From bottom to top
+Reserved
+Text (program code, instructions)
+Static data (global variables)
+Dynamic data (heap, malloc, new) grows upward
+Stack (automatic storage)grows downward
+
+32-bit constants
+Most constants small (16 bits large enough)
+Occasional 32-bit constant
+	lui (load upper immediate) rt, constant
+	or with itself 
+	
+Branch addressing
+Branch instructions: Opcode, two registers, target address
+Most branch targets near branch
+PC-relative addressing
+target = PC + offset * 4 (PC already incremented by 4)
+Shift left 2 -> 00 because instructions always at 00 
+
+Jump Addressing
+6 bit opcode and 26 bit address (immediate)
+Target address = PC(31-28):(address * 4)
+
+
+
+
+
+
+
+
+
+
+Arithmetic
+Also overflow and floating point
+
+Subtraction
+Invert and add 1 -> pass +1 for carry-in at module 0 
+
+Overflow
+XOR 2 most significant carry-outs
+
+Set Less Than (SLT)
+Most significant bit is sign bit -> reroute to least 
+significant bit's less
+Added still does subtraction -> use adder as way of generating
+value from subtraction -> take result and send out 
+
+
+
+
+
+From 3.4
+Multiplication is sequence of adds and shifts
+Length of product is the sum of operand lengths
+32-bit multiplicand -> 64-bit register for 32 possible shifts
+32-bit x 32-bit -> 64-bit product, 64-bit ALU
+
+Multiplicand shifted left every iteration (kind of like 0 placeholders in multplication)
+Multiplier shifted right every iteration to get current digit in least significant bit
+32-bits -> 32 repetitions
+
+Optimized multiplier
+Multiplicand - 32 significant bits (although can have 64 bits total after shifting)
+Instead of shifting multiplicand, shift product register
+ALU is now 32-bits -> saves product and latency
+
+
+
+
+These do not include jump implementation
+
+R-type instructions
+RegDst - 1 (want to use rd as destination regsiter)
+Branch - 0 (Don't want to branch, AND gate should be 0)
+MemRead - 0 (Don't want nonsense)
+MemtoReg - (ALU result not memory output)
+ALUOp - (10) - Use function field
+MemWrite - 0 (Don't want nonsese)
+ALUSrc - 0 (use read data 2 not the immediate)
+RegWrite - 1 (want to write result to register file)
+
+Load instruction
+RegDst - 0 (want to use rt for write register)
+Branch - 0 (don't want to branch)
+MemRead - 1 (reading from memory and putting to register)
+MemtoReg - 1 (from memory to write data port)
+ALUOp - 00 (add instruction)
+MemWrite - 0 (not writing to memory, only reading)
+ALUSrc - 1 (want to use the immediate)
+RegWrite - 1 (writing to register file for load)
+
+Branch-on-Equal instruction
+RegDst - X (not writing to register file)
+Branch - 1 (want to branch...)
+MemRead - 0 (don't want nonsense)
+MemtoReg - X (not writing to register file)
+ALUOp - 01 (subtraction)
+Memwrite - 0 (don't want nonsense)
+ALUSrc - 0 (use register for ALU)
+RegWrite - 0 (don't want to write to regiser file)

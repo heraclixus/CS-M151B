@@ -1,0 +1,102 @@
+Problems 1.5, 1.6, 1.7, and 1.13 in the class textbook.
+
+1.5
+a) Processor with highest performance expressed in instructions per second.  
+We are given CPI (cycles / instruction) and clock frequency (cycle / second).  
+From the units, we see that we can get instructions / second by taking (clock frequency) / (CPI).  
+P1:  (3*10^9 cycles / second) / (1.5 cycles / instruction) = 2*10^9 (instructions / second)
+P2:  (2.25*10^9 cycles / second) / (1 cycle / instruction) = 2.25*10^9 (instructions / second)
+P3:  (4.0*10^9 cycles / second) / (2.2 cycles / instruction) = 1.82*10^9 (instructions / second)
+From these values, we see that Processor 2 has the highest performance
+using this measure of efficiency.
+b) Processors execute program in 10 seconds.  Number of cycles and instructions?
+First, we will calculate the number of cycles.
+The clock frequency is measured (cycles / second), so we can just multiply the 
+clock frequency by the duration of time that the program is run.
+P1: (3*10^9 cycles / second) * (10 seconds) = 3*10^10 cycles
+P2: (2.25*10^9 cycles / second) * (10 seconds) = 2.25*10^10 cycles
+P3: (4.0*10^9 cycles / second) * (10 seconds) = 4.0*10^10 cycles
+Next, we need to calculate the number of instructions.  To do this, we multiply 
+the numbers we calculated in part a) by the duration of time that the program is executed.
+P1: (2*10^9 instructions / second) * (10 seconds) = 2*10^10 instructions
+P2: (2.25*10^9 instructions / second) * (10 seconds) = 2.25*10^10 instructions
+P3: (1.82*10^9 instructions / second) * (10 seconds) = 1.82*10^10 instructions
+c) We want to reduce the execution time by 30%, but this leads to an increase of 20% in the CPI.
+We need to calculate the appropriate clock rate to get this execution time reduction.
+We know:  (execution time) = (instruction count) * (cycles per instruction) / (old clock frequency)
+We want:  0.7(execution time) = (instruction count) * 1.2(cycles per instruction) / (new clock frequency)
+From these, we get: 0.7 * (instruction count) * (cycles per instruction) / (old clock frequency)
+                   =(instruction count) * 1.2(cycles per instruction) / (new clock frequency)
+Simplifying: 0.7 / (clock frequency) = 1.2 / (new clock frequency)
+So, (new clock frequency) = (1.2 / 0.7) * (old clock frequency)
+Plugging in these numbers, we get:
+P1:  5.14 GHz
+P2:  3.86 GHz
+P3:  6.86 GHz
+
+
+
+1.6
+10% class A, 20% class B, 50% class C, 20% class D (instruction percentages) 
+P1 CPI (A,B,C,D):  1,2,3,3
+P2 CPI (A,B,C,D):  2,2,2,2 
+a) Global CPI of P1 = .1*1 + .2*2 + .5*3 + .2*3 = 2.6 cycles / instruction
+   Global CPI of P2 = .1*2 + .2*2 + .5*2 + .2*2 = 2.0 cycles / instruction 
+b) There are 10^6 instructions.  We can multiply the CPI by the IC to get number of cycles.
+P1:  (2.6 cycles / instruction) * 10^6 instructions = 2.6*10^6 cycles
+P2:  (2.0 cycles / instruction) * 10^6 instructions = 2.0*10^6 cycles 
+If we divide the number of cycles by the frequency (cycles / second), we will get the 
+execution time.   
+P1:  (2.6*10^6 cycles) / (2.5*10^9 cycles / second) = 1.04*10^-3 seconds
+P2:  (2.0*10^6 cycles) / (3.0*10^9 cycles / second) = 6.66*10^-4 seconds
+Based on execution time, P2 has the faster implementation.
+
+
+
+
+1.7
+a)  We know:  ET = IC * CPI * CT
+CPI = ET / (IC * CT)
+Compiler A:  CPI = (1.1 s) / ((1.0*10^9 instructions) * (1.0*10^-9 second / cycle))
+             CPI = 1.1 cycles / instruction 
+Compiler B:  CPI = (1.5 s) / ((1.2*10^9 instructions) * (1.0*10^-9 second / cycle))
+             CPI = 1.25 cycles / instruction
+b)  The compiled programs run on two different processors.  Since the programs were 
+compiled in the same way, the IC and CPI stay the same.  Only the execution time and 
+CT are changing when we use the different processors.
+ETa = ICa * CPIa * CTa = ETb = ICb * CPIb * CTb
+(1.0*10^9 instructions) * (1.1 cycles / instruction) * CTa 
+= (1.2*10^9 instructions) * (1.25 cycles / instruction) * CTb 
+Therefore, CTa = (1.2 * 1.25) / (1.0 * 1.1) CTb = 1.36 CTb
+The clock time for A is 1.36 times larger than the clock time for B. 
+To express this using frequencies, we take the reciprocal (1/136 = 0.735).
+The clock frequency for A is 0.735 of the clock frequency for B.
+c)  ET = IC * CPI * CT
+ET = (6.0*10^8 instructions) * (1.1 cycles / instruction) * (1.0*10^-9 seconds / cycle)
+ET = 0.66 seconds
+The new compiler is 1.1/0.66 = 1.67 times faster than compiler A.
+The new compiler is 1.5/0.66 = 2.27 times faster than compiler B.
+
+
+
+
+1.13
+1)  If the time for FP operations is reduced by 20%, the program will take 
+56 seconds instead of 70 seconds executing those instructions.  All of the other
+instructions will take the same amount of time, so those times are unaffected.  
+Therefore the total time is reduced by 14 seconds.
+2)  I'm not really sure what the INT instructions are.
+I will assume the unaccounted execution time is taken up by the INT instructions,
+so 250 - 70 - 85 - 40 = 55 seconds are taken up by INT instructions.  If the total time is
+reduced by 20% uniformly across all instructions, then the time for INT instructions will
+be reduced by 20%, which means the program will take 44 seconds instead of 55 seconds 
+on those instructions (a reduction of 11 seconds).
+3)  For this question, we use Amdahl's law.
+t(improved) = (t(affected) / (improvement factor)) + t(unaffected)
+To reduce the total execution time by 20%, we want the program to take 
+200 seconds (improved time) instead of 250 seconds  Branch instructions take 40 
+seconds of the program, so the rest (210 seconds) are unaffected by the improvement.
+Plugging in these numbers:
+200 = 40 / (improvement factor) + 210 
+The improvement factor is always positive, so there's no way we can see that level of 
+improvement by just improving branch instructions.

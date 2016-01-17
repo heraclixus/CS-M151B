@@ -1,0 +1,109 @@
+Homework 2
+
+Problems 2.24, 2.26.1, 2.26.3, 2.46.1 from class text
+
+2.24
+A jump instruction has two components:  a 6-bit opcode and a 26-bit immediate.
+The hardware moves the program counter (PC) to the next insutrction (+4).  After
+the program counter is incremented by 4, we take the first 4 bits of the
+instruction specified by the program counter to be the first 4 bits of our
+target address.  The next 26 bits of our target address are all taken from the
+immediate.  The last two digits are both 0's because all addresses in MIPS are
+32-bits, so they must end in 00 to take up 4 bytes.
+
+From all this, the PC will be at 0x20000000 (I will just assume this is
+after it moves to the next instruction).  The most significant byte is 2,
+which is 0010 in bits.  These 4 bits are our 4 most significant bits in
+our target address.  The greatest immediate is all 1's.  Therefore, the 
+highest possible address we can jump to is:
+0010 1111 1111 1111 1111 1111 1111 1100
+
+Since we want to get to
+0100 0000 0000 0000 0000 0000 0000 0000,
+we see that this jump isn't possible.
+
+Using the branch-on-equal (beq) instruction means that we are using an 
+R-type instruction.  This means we can only have a 16-bit immediate instead
+of a 26-bit immediate.  This means we can't jump as far with this instrction.
+Therefore, we conclude that this jump isn't possible with these types of 
+instructions.
+
+
+2.26.1
+Translating the loop:
+TOP OF THE LOOP
+if $t1 < $0 -> $t0 = 1, otherwise $t0 = 0
+if $t0 = $0 -> jump to END OF LOOP
+$t1 -= 1
+$s2 += 2
+jump to TOP OF THE LOOP
+END OF LOOP
+
+Value of t1 (beginning loop)	Value of s2 (beginning loop)	Incremnted value
+10								0								2
+9								2								4
+8								4								6
+7								6								8
+6								8								10
+5								10								12
+4								12								14
+3								14								16
+2								16								18
+1								18								20
+0								20								22
+-1 (less than 0 so jump			22								N/a				
+	 without incrementing s2)								
+
+Therefore, the value of s2 at the end of the loop is 22 (assuming it was 0,
+initially).
+
+
+2.26.3
+We will look at the impact of different values of N's on the overall
+instruction count and see if there's a pattern.
+
+Value of N		Number of Instructions		
+-1				2
+0				7
+1				12
+2				17
+3				22
+4				27
+5				32
+
+When N=-1, the loop will only execute two instructions: the slt and beq.
+These instructions always get executed to exit the loop.  When N=0, we go 
+through the entire loop once (5 instructions) and then exit the loop (2 more
+instruction).  Everytime we increment N after that, we go through the loop
+an additional time.
+
+Therefore, we have a total of 5*(N+1) + 2 instructions that get executed.
+
+
+2.46.1
+Instruction type 	CPI		Count 			Cycles (CPI*Count)
+Arithmetic			1 		500 million 	500 million
+Load/Store			10 		300 million 	3000 million
+Branch 				3 		100 million 	300 million
+
+Execution Time = Clock Time * Cycles 
+			   = Clock Time * [(500+3000+300) million cycles]
+			   = Clock Time * [3800 million cycles]
+			   = 3800 million * Clock Time
+
+We can decrease the number of arithmetic instructions by 25%, which will raise
+the clock time by 10%.
+
+Instruction type 	CPI		Count 			Cycles (CPI*Count)
+Arithmetic			1 		375 million 	375 million
+Load/Store			10 		300 million 	3000 million
+Branch 				3 		100 million 	300 million
+
+Execution Time = Clock Time * Cycles
+			   = 1.1*Clock Time * [(375+3000+300) million cycles] 
+			   = 1.1*Clock Time * [3675 million cycles]
+			   = 4042.5 million * Clock Time
+
+We see that overall, this is not a good design decision.  It takes longer to
+execute our program after the proposed adjustments are made than before we made
+those changes.

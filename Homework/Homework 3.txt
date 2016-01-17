@@ -1,0 +1,63 @@
+1) G0 = A0B0 -> both A,B are ready at 0T -> 2-input AND is 2T delay
+
+2) P0 = A0^B0 -> same logic as 1) -> 2T delay
+
+3) Ga = G3 + G2P3 + G1P2P3 + G0P1P2P3
+longest delay is from last term -> 4-AND, 4-OR on top of 2T delay for G's and P's
+2T + 5T + 5T = 12T
+
+4) Pa = P0P1P2P3
+2T delay for P's, 4-input AND -> 7T delay
+
+5) c12 = Gc + GbPc + GaPbPc + c0PaPbPc
+maximum delay from 3rd term because Ga takes 12T
+12T + 3-AND + 4-OR = 12T + 3T + 5T = 20T
+
+6) c15 = G14 + G13P14 + G12P13P14 + c12P12P13P14
+from 5), c12 has 20T delay
+Additional 4-AND, 4-OR -> 5T, 5T
+total delay of 30T
+
+7) c16 = Gd + GcPd + GbPcPd + GaPbPcPd + c0PaPbPcPd
+maximum delay from second to last term
+12T delay for Ga
+Additional 4-AND, 5-OR
+total delay of 24T
+
+8) S15 = (A15^B15) ^ c15
+c15 has a delay of 30T, additional 2T from the XOR
+total delay of 32T
+
+9) c20 = G19 + G18P19 + G17P18P19 + G16P17P18P19 + c16P16P17P18P19
+The carry is assumed, so ready at 0T
+All G's and P's are ready at 2T
+Additional 5-AND, 5-OR
+Total delay 16T
+
+10) c19 = G18 + G17P18 + G16P17P18 + c16P16P17P18
+2T for the G's and P's to be ready
+Additional 4-AND, 4-OR
+total delay for c19 is 12T
+S19 needs to be XOR'd with c19 so additional 2T
+therefore total delay becomes 14T
+
+11) c24 = G23 + G22P23 + G21P22P23 + G20P21P22P23 + c20P20P21P22P23
+16T for c20 to be ready
+Additional 5-AND, 5-OR
+total 30T delay
+
+Establish here that c28 is c24's delay + 14T so 44T
+
+12) c31 = G30 + G29P30 + G28P29P30 + c28P28P29P30
+c28 ready at 44T
+Additional 4-AND, 4-OR
+total dela 54T
+
+13)  c32 = G31 + G30P31 + G29P30P31 + G28P29P30P31 + c28P28P29P30P31
+c28 ready at 44T
+Additional 5-AND, 5-OR and go through MUX
+44T + 14T + 4T = 62T
+
+14) S31 = delay from c31 + 2T for XOR + 4T for MUX
+54T + 6T = 60T
+total dealy of 60T
